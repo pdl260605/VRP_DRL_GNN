@@ -1,4 +1,4 @@
-# CVRP solver with Multi-Head Attention
+# CVRP solver with Graph Neural Network
 
 TensorFlow2 and PyTorch implementation of `ATTENTION, LEARN TO SOLVE ROUTING PROBLEMS!`(Kool et al. 2019)(https://arxiv.org/pdf/1803.08475.pdf)
 
