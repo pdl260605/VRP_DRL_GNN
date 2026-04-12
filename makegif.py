@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
  
 if __name__ == "__main__":
-	folderName = "../../Downloads/"
+	folderName = "./"
 	fileName = "newplot*.png"
 	if not os.path.isdir(folderName):
 		raise FileNotFoundError("check folderName")

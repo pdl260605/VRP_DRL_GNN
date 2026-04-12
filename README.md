@@ -43,6 +43,9 @@ you would see the pickle file in `Pkl` dir. now you can start training the model
 
 ```
 python train.py -p Pkl/***.pkl
+
+py train_light.py -p Pkl/VRP50_train.pkl
+py train_light.py -p Pkl/VRP100_train.pkl
 ```
 
 Plot prediction of the pretrained model
@@ -66,6 +69,12 @@ python plot.py -p Weights/***.pt -t ../OpenData/A-n***.txt -b 128
 ```
 
 One example would be `cd PyTorch && python plot.py -p Weights/VRP50_train_epoch19.pt -t ../OpenData/A-n45-k7.txt -d sampling -b 128` 
+
+```
+py plot_light.py -p Weights/VRP20_train_GNN_Light_epoch19.pt -t ../OpenData/A-n45-k7.txt -d sampling -b 128
+
+py plot.py -p Weights/VRP20_train_epoch18.pt -t ../OpenData/A-n45-k7.txt -d sampling -b 128
+```
 
 ## Reference
 * https://github.com/wouterkool/attention-learn-to-route
