@@ -1,82 +1,148 @@
-# CVRP solver with Graph Neural Network
+# CVRP Solver with Graph Neural Network
 
-TensorFlow2 and PyTorch implementation of `ATTENTION, LEARN TO SOLVE ROUTING PROBLEMS!`(Kool et al. 2019)(https://arxiv.org/pdf/1803.08475.pdf)
+PyTorch implementation of **"Attention, Learn to Solve Routing Problems!"** (Kool et al., 2019) ([arXiv](https://arxiv.org/pdf/1803.08475.pdf)), mở rộng với kiến trúc **GNN Light** nhẹ hơn và giao diện so sánh trực quan.
 
 <img src="https://user-images.githubusercontent.com/51239551/88506411-cd450f80-d014-11ea-84eb-12e7ab983780.gif" width="650"/>
 
-<img src="https://user-images.githubusercontent.com/51239551/88507610-bfdd5480-d017-11ea-99de-e9850e6be0db.gif" width="650"/>
+---
 
-<img src="https://user-images.githubusercontent.com/51239551/89150677-0ee83400-d59a-11ea-90ed-2852dc1ddd4b.gif" width="650"/>
+## Mô tả
 
-## Description
+Dự án gồm **hai kiến trúc model**:
 
-[Slide Share -- CVRP solver with Multi Heads Attention --](https://www.slideshare.net/RINTAROSATO4/cvrp-solver-with-multihead-attention)
+| Model | Script vẽ | Kiến trúc | Embed dim | Layers |
+|---|---|---|---|---|
+| `VRP{N}_train_epoch{E}.pt` | `plot.py` | Attention (GNN đầy đủ) | 128 | 3 |
+| `VRP{N}_train_GNN_Light_epoch{E}.pt` | `plot_light.py` | GNN Light | 64 | 2 |
 
+---
 
-## Dependencies
+## Cài đặt
 
-* Python >= 3.6
-* TensorFlow >= 2.0
-* PyTorch = 1.5
-* tqdm
-* scipy
-* numpy
-* plotly (only for plotting)
-* matplotlib (only for plotting)
-
-
-## Usage
-
-First move to `PyTorch` or `TensorFlow2` dir. 
-
-```
-cd PyTorch
+```bash
+pip install torch numpy matplotlib plotly tqdm
 ```
 
-Then, generate the pickle file contaning hyperparameter values by running the following command.
+Yêu cầu: Python ≥ 3.8, PyTorch ≥ 1.9
+
+---
+
+## Cấu trúc thư mục
 
 ```
-python config.py
+VRP_DRL_GNN/
+├── PyTorch_GNN/
+│   ├── run_gui.py          ← Giao diện so sánh (MỚI)
+│   ├── plot.py             ← Vẽ model GNN Attention (CLI)
+│   ├── plot_light.py       ← Vẽ model GNN Light (CLI)
+│   ├── train.py / train_light.py
+│   ├── model.py / model_light.py
+│   ├── Weights/            ← File .pt (model weights)
+│   ├── Csv/                ← Log training
+│   └── Pkl/                ← Hyperparameter configs
+├── OpenData/               ← Dữ liệu chuẩn Augerat et al.
+│   ├── A-n45-k7.txt
+│   └── A-n53-k7.txt
+└── README.md
 ```
 
-you would see the pickle file in `Pkl` dir. now you can start training the model.
+---
 
-```
-python train.py -p Pkl/***.pkl
+## Giao diện so sánh (MỚI)
 
-py train_light.py -p Pkl/VRP50_train.pkl
-py train_light.py -p Pkl/VRP100_train.pkl
-```
+File `run_gui.py` cung cấp giao diện đồ họa để **chạy và so sánh nhiều model cùng lúc**.
 
-Plot prediction of the pretrained model
-(in this example, batch size is 128, number of customer nodes is 50)
+### Chạy GUI
 
-```
-python plot.py -p Weights/***.pt(or ***.h5) -b 128 -n 50
+```bash
+cd PyTorch_GNN
+python run_gui.py
 ```
 
-You can change `plot.py` into `plot_2opt.py`.  
-  
-2opt is a local search method, which improves a crossed route by swapping arcs.  
+### Tính năng
 
-If you want to verify your model, you can use opensource dataset in `OpenData` dir.
-  
-Opensource data is obtained from Augerat et al.(1995)
-  
-please refer to [Capacitated VRP Instances by NEO Research Group](https://neo.lcc.uma.es/vrp/vrp-instances/capacitated-vrp-instances/)
+- **Chọn tối đa 6 model** từ thư mục `Weights/` (tự động nhận diện GNN Attention vs GNN Light)
+- **Chọn 1 file dữ liệu** từ `OpenData/` hoặc duyệt file tùy chọn
+- Tất cả model chạy cùng dữ liệu để so sánh công bằng
+- **Tab "Bản đồ Routes"**: hiển thị đường đi từng model cạnh nhau
+- **Tab "So sánh Chi phí"**: biểu đồ Best Cost / Avg Cost / Số tuyến + bảng tóm tắt
+- Hỗ trợ CPU và GPU tự động
+
+### Tham số GUI
+
+| Tham số | Mô tả | Mặc định |
+|---|---|---|
+| Batch size | Số giải pháp sinh ra (chọn nghiệm tốt nhất) | 128 |
+| Decode | `sampling` (đa dạng) hoặc `greedy` (nhanh) | sampling |
+
+---
+
+## Chạy từng model qua dòng lệnh
+
+### Model MTH Attention
+
+```bash
+cd PyTorch_GNN
+python plot.py -p Weights/VRP50_train_epoch19.pt -t ../OpenData/A-n45-k7.txt -d sampling -b 128
 ```
-python plot.py -p Weights/***.pt -t ../OpenData/A-n***.txt -b 128
+
+### Model GNN Light
+
+```bash
+cd PyTorch_GNN
+python plot_light.py -p Weights/VRP20_train_GNN_Light_epoch19.pt -t ../OpenData/A-n45-k7.txt -d sampling -b 128
 ```
 
-One example would be `cd PyTorch && python plot.py -p Weights/VRP50_train_epoch19.pt -t ../OpenData/A-n45-k7.txt -d sampling -b 128` 
+**Tham số:**
 
+| Flag | Mô tả |
+|---|---|
+| `-p` | Đường dẫn file weights `.pt` (bắt buộc) |
+| `-t` | File dữ liệu txt (không bắt buộc) |
+| `-b` | Batch size |
+| `-d` | Decode: `greedy` hoặc `sampling` |
+| `-n` | Số khách hàng (chỉ dùng khi không có `-t`) |
+
+---
+
+## Training
+
+### Bước 1: Sinh config
+
+```bash
+cd PyTorch_GNN
+python config.py -n 20    # VRP20
+python config.py -n 50    # VRP50
 ```
-py plot_light.py -p Weights/VRP20_train_GNN_Light_epoch19.pt -t ../OpenData/A-n45-k7.txt -d sampling -b 128
 
-py plot.py -p Weights/VRP20_train_epoch18.pt -t ../OpenData/A-n45-k7.txt -d sampling -b 128
+### Bước 2: Train
+
+```bash
+# GNN Attention
+python train.py -p Pkl/VRP20_train.pkl
+
+# GNN Light
+python train_light.py -p Pkl/VRP20_train.pkl
+python train_light.py -p Pkl/VRP50_train.pkl
 ```
 
-## Reference
-* https://github.com/wouterkool/attention-learn-to-route
-* https://github.com/d-eremeev/ADM-VRP
-* https://qiita.com/ohtaman/items/0c383da89516d03c3ac0
+---
+
+## Dữ liệu chuẩn (OpenData)
+
+Dữ liệu từ **Augerat et al. (1995)**:
+
+| File | Khách hàng | Xe |
+|---|---|---|
+| `A-n45-k7.txt` | 44 | 7 |
+| `A-n53-k7.txt` | 52 | 7 |
+
+Nguồn: [NEO Research Group](https://neo.lcc.uma.es/vrp/vrp-instances/capacitated-vrp-instances/)
+
+---
+
+## Tham khảo
+
+- [Kool et al., 2019 — Attention, Learn to Solve Routing Problems!](https://arxiv.org/pdf/1803.08475.pdf)
+- [wouterkool/attention-learn-to-route](https://github.com/wouterkool/attention-learn-to-route)
+- [d-eremeev/ADM-VRP](https://github.com/d-eremeev/ADM-VRP)
