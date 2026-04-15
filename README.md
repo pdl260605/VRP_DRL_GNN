@@ -12,7 +12,7 @@ Dự án gồm **hai kiến trúc model**:
 
 | Model | Script vẽ | Kiến trúc | Embed dim | Layers |
 |---|---|---|---|---|
-| `VRP{N}_train_epoch{E}.pt` | `plot.py` | Attention (GNN đầy đủ) | 128 | 3 |
+| `VRP{N}_train_epoch{E}.pt` | `plot.py` | Multi-Head Attention | 128 | 3 |
 | `VRP{N}_train_GNN_Light_epoch{E}.pt` | `plot_light.py` | GNN Light | 64 | 2 |
 
 ---
