@@ -146,3 +146,4 @@ Nguồn: [NEO Research Group](https://neo.lcc.uma.es/vrp/vrp-instances/capacitat
 - [Kool et al., 2019 — Attention, Learn to Solve Routing Problems!](https://arxiv.org/pdf/1803.08475.pdf)
 - [wouterkool/attention-learn-to-route](https://github.com/wouterkool/attention-learn-to-route)
 - [d-eremeev/ADM-VRP](https://github.com/d-eremeev/ADM-VRP)
+- [VRP_DRL_MHA](https://github.com/Rintarooo/VRP_DRL_MHA?tab=readme-ov-file)
