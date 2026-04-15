@@ -33,7 +33,7 @@ Yêu cầu: Python ≥ 3.8, PyTorch ≥ 1.9
 VRP_DRL_GNN/
 ├── PyTorch_GNN/
 │   ├── run_gui.py          ← Giao diện so sánh (MỚI)
-│   ├── plot.py             ← Vẽ model GNN Attention (CLI)
+│   ├── plot.py             ← Vẽ model MHA (CLI)
 │   ├── plot_light.py       ← Vẽ model GNN Light (CLI)
 │   ├── train.py / train_light.py
 │   ├── model.py / model_light.py
@@ -61,7 +61,7 @@ python run_gui.py
 
 ### Tính năng
 
-- **Chọn tối đa 6 model** từ thư mục `Weights/` (tự động nhận diện GNN Attention vs GNN Light)
+- **Chọn tối đa 6 model** từ thư mục `Weights/` (tự động nhận diện Multi-Head Attention vs GNN Light)
 - **Chọn 1 file dữ liệu** từ `OpenData/` hoặc duyệt file tùy chọn
 - Tất cả model chạy cùng dữ liệu để so sánh công bằng
 - **Tab "Bản đồ Routes"**: hiển thị đường đi từng model cạnh nhau
